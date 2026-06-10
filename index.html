@@ -588,6 +588,7 @@ window.addEventListener('scroll', () => {
   sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
   navLinks.forEach(a => { a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green)' : ''; });
 });
+  applyLang('es');
 </script>
 </body>
 </html>
