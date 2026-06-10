@@ -348,6 +348,10 @@
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq.q1">¿Zotlin Launcher es completamente gratuito?</span><div class="faq-arrow">+</div></button>
       <div class="faq-body" data-i18n="faq.a1">Sí, es 100% gratuito y de código abierto. No hay planes de pago, suscripciones ni funciones bloqueadas.</div>
+      <div class="faq-item reveal">
+  <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq.q6">¿Por qué Windows me dice "Windows protegió su PC"?</span><div class="faq-arrow">+</div></button>
+  <div class="faq-body" data-i18n="faq.a6">Es una advertencia normal de Windows SmartScreen que aparece cuando un ejecutable no tiene suficientes descargas acumuladas para ser reconocido automáticamente como seguro. No indica que el archivo sea malicioso. Zotlin Launcher es 100% open source — podés revisar cada línea del código en GitHub. Para continuar, hacé click en "Más información" y luego en "Ejecutar de todas formas".</div>
+</div>
     </div>
     <div class="faq-item reveal">
       <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq.q2">¿Necesito tener Java instalado?</span><div class="faq-arrow">+</div></button>
@@ -405,6 +409,8 @@
 // ── i18n
 const translations = {
   es: {
+    "faq.q6": "¿Por qué Windows me dice \"Windows protegió su PC\"?",
+    "faq.a6": "Es una advertencia normal de Windows SmartScreen que aparece cuando un ejecutable no tiene suficientes descargas acumuladas para ser reconocido automáticamente como seguro. No indica que el archivo sea malicioso. Zotlin Launcher es 100% open source — podés revisar cada línea del código en GitHub. Para continuar, hacé click en \"Más información\" y luego en \"Ejecutar de todas formas\". Si eso no funciona, hacé click derecho sobre el archivo descargado, seleccioná \"Propiedades\" y al final de la ventana marcá la casilla \"Desbloquear\", luego aplicá y volvé a ejecutarlo.",
     "nav.reports": "Reportes & Sugerencias",
     "rep.tag": "// reportes & sugerencias",
 "rep.title": "¿Algo que<br/><em>mejorar?</em>",
@@ -468,6 +474,8 @@ const translations = {
     "footer.license": "Licencia"
   },
   en: {
+    "faq.q6": "Why does Windows say \"Windows protected your PC\"?",
+    "faq.a6": "This is a normal Windows SmartScreen warning that appears when an executable hasn't accumulated enough downloads to be automatically recognized as safe. It does not mean the file is malicious. Zotlin Launcher is 100% open source — you can review every line of code on GitHub. To continue, click \"More info\" and then \"Run anyway\". If that doesn't work, right-click the downloaded file, select \"Properties\", and at the bottom of the window check the \"Unblock\" checkbox, then apply and run it again.",
     "nav.reports": "Reports & Suggestions",
     "rep.tag": "// reports & suggestions",
 "rep.title": "Something to<br/><em>improve?</em>",
