@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" data-lang="es">
+<html lang="es" data-lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zotlin Launcher — The Modern MC Launcher</title>
+  <title>Loryq Launcher — The Modern MC Launcher</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -11,25 +11,60 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-brands/css/uicons-brands.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-straight/css/uicons-solid-straight.css'>
   
+  <script>
+    (function () {
+      try {
+        const savedTheme = localStorage.getItem('loryq-theme');
+        document.documentElement.setAttribute(
+          'data-theme',
+          savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : 'dark'
+        );
+      } catch (_) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+  
   <style>
     :root {
-      --black:    #0a0c0a;
-      --dark:     #111612;
-      --card:     #151b14;
-      --border:   #1e2a1c;
-      --green:    #4ade80;
-      --green-dim:#2a7a46;
-      --green-bg: rgba(74,222,128,.07);
-      --muted:    #6b8c6a;
-      --light:    #d6ead4;
-      --white:    #f0f7ee;
+      color-scheme: dark;
+      --black:    #100d07;
+      --dark:     #17130b;
+      --card:     #201a0e;
+      --border:   #3a2e14;
+      --green:    #facc15;
+      --green-dim:#d69e05;
+      --green-bg: rgba(250,204,21,.09);
+      --muted:    #b8a66b;
+      --light:    #fff1b8;
+      --white:    #fffdf2;
+      --nav-bg:   rgba(16,13,7,.84);
+      --hero-glow: rgba(250,204,21,.18);
+      --accent-border: rgba(250,204,21,.25);
       --radius:   14px;
       --mono: 'DM Mono', monospace;
       --sans: 'Syne', sans-serif;
     }
+
+    html[data-theme="light"] {
+      color-scheme: light;
+      --black:    #fffaf0;
+      --dark:     #fff3c4;
+      --card:     #ffffff;
+      --border:   #ead798;
+      --green:    #eab308;
+      --green-dim:#b7791f;
+      --green-bg: rgba(234,179,8,.11);
+      --muted:    #7a6832;
+      --light:    #4d3d0b;
+      --white:    #1f1604;
+      --nav-bg:   rgba(255,250,240,.86);
+      --hero-glow: rgba(250,204,21,.24);
+      --accent-border: rgba(234,179,8,.30);
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: var(--black); color: var(--light); font-family: var(--sans); overflow-x: hidden; }
+    body { background: var(--black); color: var(--light); font-family: var(--sans); overflow-x: hidden; transition: background .35s ease, color .35s ease; }
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -40,12 +75,91 @@
     ::-webkit-scrollbar-track { background: var(--black); }
     ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 99px; }
 
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      width: 48px;
+      height: 30px;
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--green);
+      cursor: pointer;
+      overflow: hidden;
+      transition: border-color .25s, transform .2s, background .25s, box-shadow .25s;
+    }
+    .theme-toggle:hover {
+      border-color: var(--green);
+      transform: translateY(-1px);
+      box-shadow: 0 0 24px rgba(250,204,21,.12);
+    }
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--green);
+      opacity: .16;
+      transition: left .45s cubic-bezier(.22,1,.36,1), background .25s, opacity .25s;
+    }
+    html[data-theme="light"] .theme-toggle::after {
+      left: 22px;
+      opacity: .22;
+    }
+    .theme-track {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: block;
+    }
+    .theme-icon {
+      position: absolute;
+      top: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1);
+    }
+    .theme-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .theme-moon {
+      left: 6px;
+      opacity: 1;
+      transform: translateY(-50%) rotate(0deg) scale(1);
+    }
+    .theme-sun {
+      right: 6px;
+      opacity: 0;
+      transform: translateY(-50%) rotate(-120deg) scale(.55);
+    }
+    html[data-theme="light"] .theme-moon {
+      opacity: 0;
+      transform: translate(16px, -50%) rotate(120deg) scale(.55);
+    }
+    html[data-theme="light"] .theme-sun {
+      opacity: 1;
+      transform: translateY(-50%) rotate(0deg) scale(1);
+    }
+
     /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 900;
       display: flex; align-items: center; justify-content: space-between;
       padding: 14px 5vw;
-      background: rgba(10,12,10,.80);
+      background: var(--nav-bg);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
@@ -66,19 +180,19 @@
 
     /* HERO */
     #hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 5vw 80px; position: relative; overflow: hidden; }
-    #hero::after { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(74,222,128,.14) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -60%); pointer-events: none; animation: pulse 6s ease-in-out infinite; }
+    #hero::after { content: ''; position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, var(--hero-glow) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -60%); pointer-events: none; animation: pulse 6s ease-in-out infinite; }
     @keyframes pulse { 0%,100%{transform:translate(-50%,-60%) scale(1);opacity:.8}50%{transform:translate(-50%,-58%) scale(1.08);opacity:1} }
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: .7rem; color: var(--green); background: var(--green-bg); border: 1px solid rgba(74,222,128,.2); padding: 5px 14px; border-radius: 99px; margin-bottom: 32px; letter-spacing: .08em; animation: fadeUp .8s ease both; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: .7rem; color: var(--green); background: var(--green-bg); border: 1px solid var(--accent-border); padding: 5px 14px; border-radius: 99px; margin-bottom: 32px; letter-spacing: .08em; animation: fadeUp .8s ease both; }
     .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 1.4s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
     .hero-logo-wrap { margin-bottom: 24px; animation: fadeUp .85s .05s ease both; }
-    .hero-logo-wrap img { width: 90px; height: 90px; border-radius: 20px; box-shadow: 0 0 40px rgba(74,222,128,.2); }
+    .hero-logo-wrap img { width: 90px; height: 90px; border-radius: 20px; box-shadow: 0 0 40px var(--accent-border); }
     h1 { font-size: clamp(3rem, 9vw, 7.5rem); font-weight: 800; line-height: .95; letter-spacing: -.04em; color: var(--white); animation: fadeUp .9s .1s ease both; }
     h1 em { font-style: normal; color: var(--green); }
     .hero-sub { max-width: 560px; margin: 28px auto 0; font-family: var(--mono); font-size: .95rem; font-weight: 300; color: var(--muted); line-height: 1.7; animation: fadeUp 1s .2s ease both; }
     .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 44px; animation: fadeUp 1s .35s ease both; }
     .btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 15px 36px; background: var(--green); color: var(--black); font-family: var(--mono); font-size: .9rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; transition: transform .2s, box-shadow .2s; }
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(74,222,128,.3); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(250,204,21,.30); }
     .btn-secondary { display: inline-flex; align-items: center; gap: 10px; padding: 15px 36px; background: transparent; color: var(--light); font-family: var(--mono); font-size: .9rem; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-decoration: none; transition: border-color .2s, color .2s; }
     .btn-secondary:hover { border-color: var(--green); color: var(--green); }
     .hero-stats { display: flex; gap: 40px; justify-content: center; margin-top: 64px; animation: fadeUp 1s .5s ease both; }
@@ -102,7 +216,7 @@
     .feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--green), transparent); opacity: 0; transition: opacity .3s; }
     .feat-card:hover { border-color: var(--green-dim); transform: translateY(-4px); }
     .feat-card:hover::before { opacity: 1; }
-    .feat-icon { width: 44px; height: 44px; background: var(--green-bg); border: 1px solid rgba(74,222,128,.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 20px; }
+    .feat-icon { width: 44px; height: 44px; background: var(--green-bg); border: 1px solid var(--accent-border); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 20px; }
     .feat-name { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 10px; }
     .feat-desc { font-family: var(--mono); font-size: .8rem; color: var(--muted); line-height: 1.7; }
 
@@ -110,13 +224,13 @@
     #download { background: var(--black); text-align: center; }
     .download-inner { max-width: 720px; margin: 0 auto; }
     .download-box { margin-top: 48px; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 48px; position: relative; overflow: hidden; }
-    .download-box::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(74,222,128,.1) 0%, transparent 60%); pointer-events: none; }
-    .version-badge { display: inline-block; font-family: var(--mono); font-size: .72rem; color: var(--green); background: var(--green-bg); border: 1px solid rgba(74,222,128,.2); padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; letter-spacing: .06em; }
+    .download-box::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(250,204,21,.12) 0%, transparent 60%); pointer-events: none; }
+    .version-badge { display: inline-block; font-family: var(--mono); font-size: .72rem; color: var(--green); background: var(--green-bg); border: 1px solid var(--accent-border); padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; letter-spacing: .06em; }
     .download-title { font-size: 1.5rem; font-weight: 800; color: var(--white); letter-spacing: -.03em; margin-bottom: 10px; }
     .download-meta { font-family: var(--mono); font-size: .78rem; color: var(--muted); margin-bottom: 32px; }
     .download-options { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
     .dl-btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 28px; background: var(--green); color: var(--black); font-family: var(--mono); font-size: .82rem; font-weight: 500; border-radius: 8px; text-decoration: none; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s; }
-    .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(74,222,128,.25); }
+    .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(250,204,21,.25); }
     .dl-btn.outline { background: transparent; color: var(--light); border: 1px solid var(--border); }
     .dl-btn.outline:hover { border-color: var(--green); color: var(--green); box-shadow: none; }
     .sys-req { margin-top: 28px; font-family: var(--mono); font-size: .72rem; color: var(--muted); display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
@@ -131,7 +245,7 @@
     .cl-version { font-size: 1.1rem; font-weight: 800; color: var(--white); }
     .cl-date { font-family: var(--mono); font-size: .7rem; color: var(--muted); }
     .cl-tag { display: inline-block; font-family: var(--mono); font-size: .62rem; padding: 3px 10px; border-radius: 4px; letter-spacing: .06em; }
-    .cl-tag.release { background: var(--green-bg); color: var(--green); border: 1px solid rgba(74,222,128,.2); }
+    .cl-tag.release { background: var(--green-bg); color: var(--green); border: 1px solid var(--accent-border); }
     .cl-tag.beta { background: rgba(251,191,36,.07); color: #fbbf24; border: 1px solid rgba(251,191,36,.2); }
     .cl-section-title { font-family: var(--mono); font-size: .75rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin: 20px 0 10px; border-left: 2px solid var(--green-dim); padding-left: 10px; }
     .cl-change { display: flex; align-items: flex-start; gap: 10px; font-family: var(--mono); font-size: .82rem; color: var(--light); line-height: 1.6; margin-bottom: 8px; padding-left: 4px; }
@@ -170,6 +284,8 @@
     @media (max-width: 700px) {
       nav { padding: 12px 5vw; }
       .nav-links { display: none; }
+      .nav-right { gap: 8px; }
+      .theme-toggle { width: 44px; height: 28px; }
       .hero-stats { gap: 20px; }
       footer { flex-direction: column; align-items: flex-start; }
     }
@@ -180,8 +296,8 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">
-    <img class="logo-img" src="logo-zotlin.png" alt="Zotlin Launcher" />
-    Zotlin<span> Launcher</span>
+    <img class="logo-img" src="logo-loryq.png" alt="Loryq Launcher" />
+    Loryq<span> Launcher</span>
   </div>
   <ul class="nav-links">
   <li><a href="#features" data-i18n="nav.features">Características</a></li>
@@ -191,6 +307,16 @@
   <li><a href="#reports" data-i18n="nav.reports">Reportes & Sugerencias</a></li>
 </ul>
   <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Cambiar a modo claro" title="Cambiar tema">
+      <span class="theme-track">
+        <span class="theme-icon theme-moon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M21 14.6A8.5 8.5 0 0 1 9.4 3a7 7 0 1 0 11.6 11.6z"/></svg>
+        </span>
+        <span class="theme-icon theme-sun" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </span>
+      </span>
+    </button>
     <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
     <a href="#download" class="nav-cta" data-i18n="nav.cta">↓ Descargar</a>
   </div>
@@ -200,11 +326,11 @@
 <section id="hero">
   <div class="hero-badge" data-i18n="hero.badge">Release 1.1.0 — Ahora disponible</div>
   <h1 data-i18n-html="hero.title">El launcher de<br/><em>Minecraft</em><br/>que mereces.</h1>
-  <p class="hero-sub" data-i18n="hero.sub">Zotlin Launcher redefine cómo jugás Minecraft. Rápido, modular y completamente personalizable — todo en un solo lugar.</p>
+  <p class="hero-sub" data-i18n="hero.sub">Loryq Launcher redefine cómo jugás Minecraft. Rápido, modular y completamente personalizable — todo en un solo lugar.</p>
   <div class="hero-actions">
-    <a href="#download" class="btn-primary" data-i18n="hero.cta1">
+    <a href="#download" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 13h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Descargar gratis</span>
+      <span data-i18n="hero.cta1">Descargar gratis</span>
     </a>
     <a href="#features" class="btn-secondary" data-i18n="hero.cta2">Ver características →</a>
   </div>
@@ -221,7 +347,7 @@
   <div class="features-header reveal">
     <div class="section-tag" data-i18n="feat.tag">// características</div>
     <h2 class="section-title" data-i18n-html="feat.title">Todo lo que<br/>necesitás, <em>nativo</em>.</h2>
-    <p class="section-desc" data-i18n="feat.desc">Sin plugins externos, sin configuraciones complicadas. Zotlin Launcher viene completo desde el primer inicio.</p>
+    <p class="section-desc" data-i18n="feat.desc">Sin plugins externos, sin configuraciones complicadas. Loryq Launcher viene completo desde el primer inicio.</p>
   </div>
   <div class="features-grid">
     <div class="feat-card reveal">
@@ -267,7 +393,7 @@
     </div>
     <div class="download-box reveal">
       <div class="version-badge" data-i18n="dl.version">VERSIÓN ACTUAL — Release 1.1.0</div>
-      <div class="download-title">Zotlin Launcher Release 1.1.0</div>
+      <div class="download-title">Loryq Launcher Release 1.1.0</div>
       <div class="download-meta" data-i18n="dl.meta">Versión estable · Solo Windows 10/11</div>
       <div class="download-options">
         <a href="https://github.com/iDontrixss/ZotlinLauncher/releases/download/V1.1.0/Zotlin.Launcher.Setup.1.1.0.exe" class="dl-btn">
@@ -392,7 +518,7 @@
   </div>
   <div class="faq-inner">
     <div class="faq-item reveal">
-      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq.q1">¿Zotlin Launcher es completamente gratuito?</span><div class="faq-arrow">+</div></button>
+      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="faq.q1">¿Loryq Launcher es completamente gratuito?</span><div class="faq-arrow">+</div></button>
       <div class="faq-body" data-i18n="faq.a1"></div>
     </div>
     <div class="faq-item reveal">
@@ -424,11 +550,11 @@
     <div class="reveal">
       <div class="section-tag" data-i18n="rep.tag">// reportes & sugerencias</div>
       <h2 class="section-title" data-i18n-html="rep.title">¿Algo que<br/><em>mejorar?</em></h2>
-      <p class="section-desc" style="margin:12px auto 0" data-i18n="rep.desc">Encontraste un bug o tenés una idea para Zotlin. Contanoslo acá.</p>
+      <p class="section-desc" style="margin:12px auto 0" data-i18n="rep.desc">Encontraste un bug o tenés una idea para Loryq. Contanoslo acá.</p>
     </div>
     <div class="download-box reveal" style="margin-top:48px;">
       <div class="download-title" data-i18n="rep.title2">Reportes & Sugerencias</div>
-      <div class="download-meta" data-i18n="rep.meta">Tu opinión ayuda a mejorar Zotlin.</div>
+      <div class="download-meta" data-i18n="rep.meta">Tu opinión ayuda a mejorar Loryq.</div>
       <div class="download-options">
         <a href="https://zotlin-reports-and-suggestions.vercel.app/" class="dl-btn" data-i18n="rep.btn">Ir a Reportes & Sugerencias →</a>
       </div>
@@ -439,8 +565,8 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">
-    <img class="logo-img" src="logo-zotlin.png" alt="Zotlin" />
-    Zotlin<span> Launcher</span>
+    <img class="logo-img" src="logo-loryq.png" alt="Loryq" />
+    Loryq<span> Launcher</span>
   </div>
   <ul class="footer-links">
     <li><a href="#">GitHub</a></li>
@@ -448,7 +574,7 @@
     <li><a href="https://zotlin-reports-and-suggestions.vercel.app/" data-i18n="nav.reports">Reportes & Sugerencias</a></li>
     <li><a href="#" data-i18n="footer.license">Licencia</a></li>
   </ul>
-  <div class="footer-copy">Zotlin Launcher — Open Source</div>
+  <div class="footer-copy">Loryq Launcher — Open Source</div>
 </footer>
 
 <script>
@@ -456,7 +582,7 @@
 const translations = {
   es: {
     "cl.110.s1": "✨ Nuevo",
-"cl.110.n1": "Nuevo logo e identidad visual de Zotlin Launcher.",
+"cl.110.n1": "Nuevo logo e identidad visual de Loryq Launcher.",
 "cl.110.n2": "Nuevo apartado \"Crear instalación optimizada\".",
 "cl.110.n3": "Integración inicial con el modpack Keo Optimized.",
 "cl.110.n4": "Soporte para importar modpacks .mrpack de Modrinth.",
@@ -486,29 +612,29 @@ const translations = {
 "cl.110.sec4": "Mejor compatibilidad con redirecciones de descarga.",
 "cl.110.sec5": "Mejor recuperación ante errores de red.",
 "cl.110.s5": "❤️ Gracias",
-"cl.110.thanks": "Gracias a todos los que probaron las primeras versiones de Zotlin Launcher y ayudaron a mejorar el proyecto. Un agradecimiento especial a ElKeoMC por permitir la integración de su modpack de optimización.",
+"cl.110.thanks": "Gracias a todos los que probaron las primeras versiones de Loryq Launcher y ayudaron a mejorar el proyecto. Un agradecimiento especial a ElKeoMC por permitir la integración de su modpack de optimización.",
     "faq.q6": "¿Por qué Windows me dice \"Windows protegió su PC\"?",
-    "faq.a6": "Es una advertencia normal de Windows SmartScreen que aparece cuando un ejecutable no tiene suficientes descargas acumuladas para ser reconocido automáticamente como seguro. No indica que el archivo sea malicioso. Zotlin Launcher es 100% open source — podés revisar cada línea del código en GitHub. Para continuar, hacé click en \"Más información\" y luego en \"Ejecutar de todas formas\". Si eso no funciona, hacé click derecho sobre el archivo descargado, seleccioná \"Propiedades\" y al final de la ventana marcá la casilla \"Desbloquear\", luego aplicá y volvé a ejecutarlo.",
+    "faq.a6": "Es una advertencia normal de Windows SmartScreen que aparece cuando un ejecutable no tiene suficientes descargas acumuladas para ser reconocido automáticamente como seguro. No indica que el archivo sea malicioso. Loryq Launcher es 100% open source — podés revisar cada línea del código en GitHub. Para continuar, hacé click en \"Más información\" y luego en \"Ejecutar de todas formas\". Si eso no funciona, hacé click derecho sobre el archivo descargado, seleccioná \"Propiedades\" y al final de la ventana marcá la casilla \"Desbloquear\", luego aplicá y volvé a ejecutarlo.",
     "nav.reports": "Reportes & Sugerencias",
     "rep.tag": "// reportes & sugerencias",
 "rep.title": "¿Algo que<br/><em>mejorar?</em>",
 "rep.title2": "Reportes & Sugerencias",
-"rep.meta": "Tu opinión ayuda a mejorar Zotlin.",
+"rep.meta": "Tu opinión ayuda a mejorar Loryq.",
 "rep.btn": "Ir a Reportes & Sugerencias →",
-"rep.desc": "Encontraste un bug o tenés una idea para Zotlin. Contanoslo acá.",
+"rep.desc": "Encontraste un bug o tenés una idea para Loryq. Contanoslo acá.",
     "nav.features": "Características",
     "nav.download": "Descarga",
     "nav.changelog": "Changelog",
     "nav.cta": "↓ Descargar",
     "hero.badge": "Release 1.1.0 — Ahora disponible",
     "hero.title": "El launcher de<br/><em>Minecraft</em><br/>que mereces.",
-    "hero.sub": "Zotlin Launcher redefine cómo jugás Minecraft. Rápido, modular y completamente personalizable — todo en un solo lugar.",
+    "hero.sub": "Loryq Launcher redefine cómo jugás Minecraft. Rápido, modular y completamente personalizable — todo en un solo lugar.",
     "hero.cta1": "Descargar gratis",
     "hero.cta2": "Ver características →",
     "hero.stat": "Gratuito",
     "feat.tag": "// características",
     "feat.title": "Todo lo que<br/>necesitás, <em>nativo</em>.",
-    "feat.desc": "Sin plugins externos, sin configuraciones complicadas. Zotlin Launcher viene completo desde el primer inicio.",
+    "feat.desc": "Sin plugins externos, sin configuraciones complicadas. Loryq Launcher viene completo desde el primer inicio.",
     "feat1.name": "UI moderna y limpia",
     "feat1.desc": "Pantalla de inicio renovada, minimalista y sin distracciones. Ajustes rediseñados con temas dinámicos y opciones avanzadas.",
     "feat2.name": "Transiciones ultra fluidas",
@@ -539,10 +665,10 @@ const translations = {
     "cl.beta.line2": "Base funcional: gestión de instancias, soporte inicial de mods y cuentas offline.",
     "cl.beta.line3": "Interfaz inicial en fase de pruebas con la comunidad.",
     "faq.title": "Preguntas<br/><em>frecuentes</em>.",
-    "faq.q1": "¿Zotlin Launcher es completamente gratuito?",
+    "faq.q1": "¿Loryq Launcher es completamente gratuito?",
     "faq.a1": "Sí, es 100% gratuito y de código abierto. No hay planes de pago, suscripciones ni funciones bloqueadas.",
     "faq.q2": "¿Necesito tener Java instalado?",
-    "faq.a2": "No. Zotlin Launcher incluye sus propios runtimes de Java (Java S). Detecta y usa automáticamente la versión correcta.",
+    "faq.a2": "No. Loryq Launcher incluye sus propios runtimes de Java (Java S). Detecta y usa automáticamente la versión correcta.",
     "faq.q3": "¿Funciona con cuentas no-premium?",
     "faq.a3": "Sí. Podés usar cuentas Premium (Microsoft) y cuentas offline. El launcher gestiona ambas de forma nativa.",
     "faq.q4": "¿Hay soporte para Linux o macOS?",
@@ -553,7 +679,7 @@ const translations = {
   },
   en: {
     "cl.110.s1": "✨ New",
-"cl.110.n1": "New Zotlin Launcher logo and visual identity.",
+"cl.110.n1": "New Loryq Launcher logo and visual identity.",
 "cl.110.n2": "New \"Create Optimized Installation\" section.",
 "cl.110.n3": "Initial integration with the Keo Optimized modpack.",
 "cl.110.n4": "Support for importing Modrinth .mrpack modpacks.",
@@ -583,29 +709,29 @@ const translations = {
 "cl.110.sec4": "Improved compatibility with download redirects.",
 "cl.110.sec5": "Better recovery from network-related errors.",
 "cl.110.s5": "❤️ Thanks",
-"cl.110.thanks": "Thank you to everyone who tested the early versions of Zotlin Launcher and helped improve the project. Special thanks to ElKeoMC for allowing the integration of his optimization modpack into the launcher.",
+"cl.110.thanks": "Thank you to everyone who tested the early versions of Loryq Launcher and helped improve the project. Special thanks to ElKeoMC for allowing the integration of his optimization modpack into the launcher.",
     "faq.q6": "Why does Windows say \"Windows protected your PC\"?",
-    "faq.a6": "This is a normal Windows SmartScreen warning that appears when an executable hasn't accumulated enough downloads to be automatically recognized as safe. It does not mean the file is malicious. Zotlin Launcher is 100% open source — you can review every line of code on GitHub. To continue, click \"More info\" and then \"Run anyway\". If that doesn't work, right-click the downloaded file, select \"Properties\", and at the bottom of the window check the \"Unblock\" checkbox, then apply and run it again.",
+    "faq.a6": "This is a normal Windows SmartScreen warning that appears when an executable hasn't accumulated enough downloads to be automatically recognized as safe. It does not mean the file is malicious. Loryq Launcher is 100% open source — you can review every line of code on GitHub. To continue, click \"More info\" and then \"Run anyway\". If that doesn't work, right-click the downloaded file, select \"Properties\", and at the bottom of the window check the \"Unblock\" checkbox, then apply and run it again.",
     "nav.reports": "Reports & Suggestions",
     "rep.tag": "// reports & suggestions",
 "rep.title": "Something to<br/><em>improve?</em>",
 "rep.title2": "Reports & Suggestions",
-"rep.meta": "Your feedback helps improve Zotlin.",
+"rep.meta": "Your feedback helps improve Loryq.",
 "rep.btn": "Go to Reports & Suggestions →",
-"rep.desc": "Found a bug or have an idea for Zotlin. Let us know.",
+"rep.desc": "Found a bug or have an idea for Loryq. Let us know.",
     "nav.features": "Features",
     "nav.download": "Download",
     "nav.changelog": "Changelog",
     "nav.cta": "↓ Download",
     "hero.badge": "Release 1.1.0 — Now available",
     "hero.title": "The <em>Minecraft</em><br/>launcher<br/>you deserve.",
-    "hero.sub": "Zotlin Launcher redefines how you play Minecraft. Fast, modular and fully customizable — all in one place.",
+    "hero.sub": "Loryq Launcher redefines how you play Minecraft. Fast, modular and fully customizable — all in one place.",
     "hero.cta1": "Download for free",
     "hero.cta2": "See features →",
     "hero.stat": "Free",
     "feat.tag": "// features",
     "feat.title": "Everything you<br/>need, <em>built-in</em>.",
-    "feat.desc": "No external plugins, no complex setup. Zotlin Launcher comes complete from the very first launch.",
+    "feat.desc": "No external plugins, no complex setup. Loryq Launcher comes complete from the very first launch.",
     "feat1.name": "Modern, clean UI",
     "feat1.desc": "Revamped home screen — minimalist and distraction-free. Redesigned settings with dynamic themes and advanced options.",
     "feat2.name": "Ultra-smooth transitions",
@@ -636,10 +762,10 @@ const translations = {
     "cl.beta.line2": "Functional base: instance management, initial mod support and offline accounts.",
     "cl.beta.line3": "Initial UI in community testing phase.",
     "faq.title": "Frequently asked<br/><em>questions</em>.",
-    "faq.q1": "Is Zotlin Launcher completely free?",
+    "faq.q1": "Is Loryq Launcher completely free?",
     "faq.a1": "Yes, it's 100% free and open source. No paid plans, subscriptions or locked features.",
     "faq.q2": "Do I need Java installed?",
-    "faq.a2": "No. Zotlin Launcher includes its own Java runtimes (Java S). It automatically detects and uses the right version for each Minecraft version.",
+    "faq.a2": "No. Loryq Launcher includes its own Java runtimes (Java S). It automatically detects and uses the right version for each Minecraft version.",
     "faq.q3": "Does it work with non-premium accounts?",
     "faq.a3": "Yes. You can use Premium (Microsoft) accounts and offline accounts. The launcher manages both natively.",
     "faq.q4": "Is there Linux or macOS support?",
@@ -651,6 +777,31 @@ const translations = {
 };
 
 let currentLang = 'es';
+
+const THEME_KEY = 'loryq-theme';
+let currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+
+function applyTheme(theme) {
+  const safeTheme = theme === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', safeTheme);
+  currentTheme = safeTheme;
+
+  try {
+    localStorage.setItem(THEME_KEY, safeTheme);
+  } catch (_) {}
+
+  const btn = document.getElementById('themeBtn');
+  if (btn) {
+    const nextThemeName = safeTheme === 'dark' ? 'modo claro' : 'modo oscuro';
+    btn.setAttribute('aria-label', `Cambiar a ${nextThemeName}`);
+    btn.setAttribute('title', `Cambiar a ${nextThemeName}`);
+  }
+}
+
+function toggleTheme() {
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
+
 
 function applyLang(lang) {
   const t = translations[lang];
@@ -698,6 +849,7 @@ window.addEventListener('scroll', () => {
   sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
   navLinks.forEach(a => { a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green)' : ''; });
 });
+  applyTheme(currentTheme);
   applyLang('es');
 </script>
 </body>
